@@ -1,0 +1,164 @@
+<div class="container mx-auto p-6">
+  <!-- En-tête -->
+  <div class="flex justify-between items-center mb-6">
+    <h1 class="text-3xl font-bold text-gray-800">Liste des Tâches</h1>
+    <button 
+      mat-raised-button 
+      color="primary"
+      (click)="openTodoForm()"
+      class="flex items-center gap-2">
+      <mat-icon>add</mat-icon>
+      Ajouter une Tâche
+    </button>
+  </div>
+
+  <!-- Filtres -->
+  <div class="bg-white p-4 rounded-lg shadow-md mb-6">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div class="form-field">
+        <label class="block text-sm font-medium text-gray-700 mb-2">Filtrer par Priorité</label>
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-select [(value)]="priorityFilter" (selectionChange)="applyFilter()">
+            <mat-option value="">Toutes les priorités</mat-option>
+            <mat-option value="Facile">Facile</mat-option>
+            <mat-option value="Moyen">Moyen</mat-option>
+            <mat-option value="Difficile">Difficile</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      
+      <div class="form-field">
+        <label class="block text-sm font-medium text-gray-700 mb-2">Filtrer par Label</label>
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-select [(value)]="labelFilter" (selectionChange)="applyFilter()">
+            <mat-option value="">Tous les labels</mat-option>
+            <mat-option value="HTML">HTML</mat-option>
+            <mat-option value="CSS">CSS</mat-option>
+            <mat-option value="NODE JS">NODE JS</mat-option>
+            <mat-option value="JQUERY">JQUERY</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      
+      <div class="flex items-end">
+        <button 
+          mat-stroked-button 
+          (click)="resetFilters()"
+          class="w-full">
+          Réinitialiser les filtres
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading -->
+  <div *ngIf="loading" class="flex justify-center items-center py-12">
+    <mat-spinner diameter="40"></mat-spinner>
+    <span class="ml-3 text-gray-600">Chargement des tâches...</span>
+  </div>
+
+  <!-- Tableau Material -->
+  <div *ngIf="!loading" class="bg-white rounded-lg shadow-md overflow-hidden">
+    <div class="overflow-x-auto">
+      <table mat-table [dataSource]="dataSource" matSort class="w-full">
+        
+        <!-- Titre Column -->
+        <ng-container matColumnDef="titre">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Titre</th>
+          <td mat-cell *matCellDef="let todo">
+            <div class="text-sm font-medium text-gray-900">{{ todo.titre }}</div>
+            <div *ngIf="todo.description" class="text-sm text-gray-500 mt-1">
+              {{ todo.description }}
+            </div>
+          </td>
+        </ng-container>
+
+        <!-- Personne Column -->
+        <ng-container matColumnDef="person">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Personne</th>
+          <td mat-cell *matCellDef="let todo">
+            <div class="text-sm font-medium text-gray-900">{{ todo.person.name }}</div>
+            <div class="text-sm text-gray-500">{{ todo.person.email }}</div>
+          </td>
+        </ng-container>
+
+        <!-- Priorité Column -->
+        <ng-container matColumnDef="priority">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Priorité</th>
+          <td mat-cell *matCellDef="let todo">
+            <span [class]="getPriorityClass(todo.priority)" class="px-2 py-1 rounded-full text-xs font-medium">
+              {{ todo.priority }}
+            </span>
+          </td>
+        </ng-container>
+
+        <!-- Labels Column -->
+        <ng-container matColumnDef="labels">
+          <th mat-header-cell *matHeaderCellDef>Labels</th>
+          <td mat-cell *matCellDef="let todo">
+            <div class="flex flex-wrap gap-1">
+              <span *ngFor="let label of todo.labels" 
+                    class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs font-medium">
+                {{ label }}
+              </span>
+            </div>
+          </td>
+        </ng-container>
+
+        <!-- Date Début Column -->
+        <ng-container matColumnDef="startDate">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Date Début</th>
+          <td mat-cell *matCellDef="let todo" class="text-sm text-gray-500">
+            {{ todo.startDate | date:'dd/MM/yyyy' }}
+          </td>
+        </ng-container>
+
+        <!-- Date Fin Column -->
+        <ng-container matColumnDef="endDate">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Date Fin</th>
+          <td mat-cell *matCellDef="let todo" class="text-sm text-gray-500">
+            {{ todo.endDate ? (todo.endDate | date:'dd/MM/yyyy') : '-' }}
+          </td>
+        </ng-container>
+
+        <!-- Actions Column -->
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef class="w-24">Actions</th>
+          <td mat-cell *matCellDef="let todo">
+            <div class="flex gap-2">
+              <button 
+                mat-icon-button 
+                color="primary"
+                (click)="openTodoForm(todo)"
+                title="Modifier"
+                class="hover:bg-blue-50">
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button 
+                mat-icon-button 
+                color="warn"
+                (click)="deleteTodo(todo)"
+                title="Supprimer"
+                class="hover:bg-red-50">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+    </div>
+
+    <!-- Pagination -->
+    <mat-paginator [pageSize]="5" [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+
+    <!-- Aucune donnée -->
+    <div *ngIf="dataSource.filteredData.length === 0" class="p-8 text-center text-gray-500">
+      <mat-icon class="text-4xl mb-2">search_off</mat-icon>
+      <p class="text-lg">Aucune tâche trouvée</p>
+      <p class="text-sm mt-1">Essayez de modifier vos filtres ou ajoutez une nouvelle tâche</p>
+    </div>
+  </div>
+</div>

@@ -1,7 +1,9 @@
 .form-field {
-  @apply mb-4;
+  margin-bottom: 12px;
 }
 
 .error-message {
-  @apply text-red-500 text-xs mt-1;
+  color: #ef4444;
+  font-size: 0.75rem;
+  margin-top: 4px;
 }

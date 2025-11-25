@@ -105,38 +105,40 @@ export class TodoListComponent implements OnInit {
   }
 
   openTodoForm(todo?: Todo): void {
-    this.personService.getPersons().subscribe(persons => {
-      const dialogRef = this.dialog.open(TodoFormComponent, {
-        width: '600px',
-        data: { 
-          todo: todo ? { ...todo } : null, 
-          persons: persons 
-        }
-      });
-
-      dialogRef.afterClosed().subscribe(result => {
-        if (result) {
-          if (todo) {
-            this.todoService.updateTodo(todo.id, { ...todo, ...result }).subscribe({
-              next: () => this.loadTodos(),
-              error: (error) => {
-                console.error('Erreur lors de la modification:', error);
-                alert('Erreur lors de la modification de la tâche');
-              }
-            });
-          } else {
-            this.todoService.createTodo(result).subscribe({
-              next: () => this.loadTodos(),
-              error: (error) => {
-                console.error('Erreur lors de la création:', error);
-                alert('Erreur lors de la création de la tâche');
-              }
-            });
-          }
-        }
-      });
+  this.personService.getPersons().subscribe(persons => {
+    const dialogRef = this.dialog.open(TodoFormComponent, {
+      width: '600px',
+      maxHeight: '80vh',
+      panelClass: 'custom-dialog-container',
+      data: { 
+        todo: todo ? { ...todo } : null, 
+        persons: persons 
+      }
     });
-  }
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        if (todo) {
+          this.todoService.updateTodo(todo.id, { ...todo, ...result }).subscribe({
+            next: () => this.loadTodos(),
+            error: (error) => {
+              console.error('Erreur lors de la modification:', error);
+              alert('Erreur lors de la modification de la tâche');
+            }
+          });
+        } else {
+          this.todoService.createTodo(result).subscribe({
+            next: () => this.loadTodos(),
+            error: (error) => {
+              console.error('Erreur lors de la création:', error);
+              alert('Erreur lors de la création de la tâche');
+            }
+          });
+        }
+      }
+    });
+  });
+}
 
   deleteTodo(todo: Todo): void {
     if (confirm(`Êtes-vous sûr de vouloir supprimer la tâche "${todo.titre}" ?`)) {

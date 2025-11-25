@@ -15,3 +15,16 @@ html, body {
 }
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+/* Styles pour le modal TodoForm */
+.todo-form-modal {
+  .mat-mdc-dialog-container {
+    max-height: 85vh !important;
+    overflow: hidden;
+  }
+  
+  .mat-mdc-dialog-content {
+    max-height: none !important;
+    overflow: visible !important;
+  }
+}

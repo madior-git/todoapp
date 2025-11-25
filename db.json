@@ -5,14 +5,18 @@
       "titre": "Développer le composant principal",
       "person": {
         "id": 1,
-        "name": "Jean Dupont",
-        "email": "jean.dupont@email.com",
-        "phone": "0123456789"
+        "name": "Aton",
+        "email": "aton@email.com",
+        "phone": "0654321987"
       },
       "startDate": "2024-01-15T00:00:00.000Z",
       "endDate": null,
       "priority": "Moyen",
-      "labels": ["HTML", "CSS"],
+      "labels": [
+        "HTML",
+        "CSS",
+        "JQUERY"
+      ],
       "description": "Créer le composant principal de l'application avec Angular Material",
       "completed": false
     },
@@ -21,14 +25,16 @@
       "titre": "Implémenter la validation des formulaires",
       "person": {
         "id": 2,
-        "name": "Marie Martin",
-        "email": "marie.martin@email.com",
+        "name": "Louis",
+        "email": "louis@email.com",
         "phone": "0987654321"
       },
       "startDate": "2024-01-16T00:00:00.000Z",
       "endDate": null,
       "priority": "Difficile",
-      "labels": ["NODE JS"],
+      "labels": [
+        "NODE JS"
+      ],
       "description": "Ajouter la validation reactive forms avec messages d'erreur",
       "completed": false
     },
@@ -37,41 +43,62 @@
       "titre": "Créer les services HTTP",
       "person": {
         "id": 3,
-        "name": "Pierre Lambert",
-        "email": "pierre.lambert@email.com",
-        "phone": "0654321987"
+        "name": "Madior",
+        "email": "madior@email.com",
+        "phone": "771717177"
       },
       "startDate": "2024-01-17T00:00:00.000Z",
       "endDate": null,
       "priority": "Facile",
-      "labels": ["HTML", "JQUERY"],
+      "labels": [
+        "HTML",
+        "JQUERY"
+      ],
       "description": "Développer les services pour communiquer avec l'API",
       "completed": false
+    },
+    {
+      "titre": "Backend Nodejs",
+      "person": {
+        "id": 4,
+        "name": "testeur",
+        "email": "testeur@email.com",
+        "phone": "0678912345"
+      },
+      "startDate": "2025-11-25T16:57:21.151Z",
+      "endDate": null,
+      "priority": "Difficile",
+      "labels": [
+        "NODE JS"
+      ],
+      "description": "Faire un backend qui permet de lister les utilisateurs ",
+      "completed": false,
+      "id": 4
     }
   ],
   "persons": [
     {
       "id": 1,
-      "name": "Jean Dupont",
-      "email": "jean.dupont@email.com",
-      "phone": "0123456789"
+      "name": "Madior",
+      "email": "madior@email.com",
+      "phone": "771717177"
     },
     {
       "id": 2,
-      "name": "Marie Martin",
-      "email": "marie.martin@email.com",
+      "name": "louis",
+      "email": "louis@email.com",
       "phone": "0987654321"
     },
     {
       "id": 3,
-      "name": "Pierre Lambert",
-      "email": "pierre.lambert@email.com",
+      "name": "Aton",
+      "email": "aton@email.com",
       "phone": "0654321987"
     },
     {
       "id": 4,
-      "name": "Sophie Bernard",
-      "email": "sophie.bernard@email.com",
+      "name": "testeur",
+      "email": "testeur@email.com",
       "phone": "0678912345"
     }
   ]

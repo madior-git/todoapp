@@ -1,0 +1,48 @@
+<div class="p-4">
+  <h2 class="text-xl font-bold mb-4 text-gray-800">
+    {{ data.person ? 'Modifier la personne' : 'Nouvelle personne' }}
+  </h2>
+
+  <form [formGroup]="personForm" class="space-y-4">
+    
+    <!-- Nom -->
+    <div class="form-field">
+      <mat-form-field appearance="outline" class="w-full">
+        <mat-label>Nom *</mat-label>
+        <input matInput formControlName="name" placeholder="Nom complet">
+        <mat-error *ngIf="isFieldInvalid('name')">
+          {{ getFieldError('name') }}
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <!-- Email -->
+    <div class="form-field">
+      <mat-form-field appearance="outline" class="w-full">
+        <mat-label>Email *</mat-label>
+        <input matInput formControlName="email" placeholder="email@exemple.com">
+        <mat-error *ngIf="isFieldInvalid('email')">
+          {{ getFieldError('email') }}
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <!-- Téléphone -->
+    <div class="form-field">
+      <mat-form-field appearance="outline" class="w-full">
+        <mat-label>Téléphone</mat-label>
+        <input matInput formControlName="phone" placeholder="01 23 45 67 89">
+      </mat-form-field>
+    </div>
+  </form>
+
+  <!-- Actions -->
+  <div class="flex justify-end gap-3 mt-6 pt-4 border-t">
+    <button mat-stroked-button (click)="onCancel()">
+      Annuler
+    </button>
+    <button mat-raised-button color="primary" (click)="onSave()" [disabled]="!personForm.valid">
+      {{ data.person ? 'Modifier' : 'Créer' }}
+    </button>
+  </div>
+</div>

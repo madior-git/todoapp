@@ -1,0 +1,99 @@
+<div class="container mx-auto p-6">
+  <!-- En-tête -->
+  <div class="flex justify-between items-center mb-6">
+    <h1 class="text-3xl font-bold text-gray-800">Gestion des Personnes</h1>
+    <button 
+      mat-raised-button 
+      color="primary"
+      (click)="openPersonForm()"
+      class="flex items-center gap-2">
+      <mat-icon>person_add</mat-icon>
+      Ajouter une Personne
+    </button>
+  </div>
+
+  <!-- Recherche -->
+  <div class="bg-white p-4 rounded-lg shadow-md mb-6">
+    <mat-form-field appearance="outline" class="w-full">
+      <mat-label>Rechercher une personne</mat-label>
+      <input matInput (keyup)="applyFilter($event)" placeholder="Nom, email ou téléphone">
+      <mat-icon matSuffix>search</mat-icon>
+    </mat-form-field>
+  </div>
+
+  <!-- Loading -->
+  <div *ngIf="loading" class="flex justify-center items-center py-12">
+    <mat-spinner diameter="40"></mat-spinner>
+    <span class="ml-3 text-gray-600">Chargement des personnes...</span>
+  </div>
+
+  <!-- Tableau -->
+  <div *ngIf="!loading" class="bg-white rounded-lg shadow-md overflow-hidden">
+    <div class="overflow-x-auto">
+      <table mat-table [dataSource]="dataSource" matSort class="w-full">
+        
+        <!-- Nom Column -->
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Nom</th>
+          <td mat-cell *matCellDef="let person" class="font-medium text-gray-900">
+            {{ person.name }}
+          </td>
+        </ng-container>
+
+        <!-- Email Column -->
+        <ng-container matColumnDef="email">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Email</th>
+          <td mat-cell *matCellDef="let person" class="text-gray-600">
+            {{ person.email }}
+          </td>
+        </ng-container>
+
+        <!-- Téléphone Column -->
+        <ng-container matColumnDef="phone">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Téléphone</th>
+          <td mat-cell *matCellDef="let person" class="text-gray-600">
+            {{ person.phone }}
+          </td>
+        </ng-container>
+
+        <!-- Actions Column -->
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef class="w-24">Actions</th>
+          <td mat-cell *matCellDef="let person">
+            <div class="flex gap-2">
+              <button 
+                mat-icon-button 
+                color="primary"
+                (click)="openPersonForm(person)"
+                title="Modifier"
+                class="hover:bg-blue-50">
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button 
+                mat-icon-button 
+                color="warn"
+                (click)="deletePerson(person)"
+                title="Supprimer"
+                class="hover:bg-red-50">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+    </div>
+
+    <!-- Pagination -->
+    <mat-paginator [pageSize]="5" [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+
+    <!-- Aucune donnée -->
+    <div *ngIf="dataSource.filteredData.length === 0" class="p-8 text-center text-gray-500">
+      <mat-icon class="text-4xl mb-2">people_outline</mat-icon>
+      <p class="text-lg">Aucune personne trouvée</p>
+      <p class="text-sm mt-1">Ajoutez une nouvelle personne pour commencer</p>
+    </div>
+  </div>
+</div>

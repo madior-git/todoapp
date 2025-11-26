@@ -80,6 +80,8 @@ export class TodoService {
   }
 
   getTodo(id: number): Observable<Todo> {
+      console.log('✅ Utilisation des données mockées pour les todos');
+
     if (environment.production) {
       const todo = MOCK_TODOS.find(t => t.id === id);
       return of(todo!);

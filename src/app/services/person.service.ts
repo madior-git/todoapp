@@ -19,6 +19,8 @@ export class PersonService {
   constructor(private http: HttpClient) {}
 
   getPersons(): Observable<Person[]> {
+      console.log('✅ Utilisation des données mockées pour les personnes');
+
     if (environment.production) {
       return of(MOCK_PERSONS);
     }

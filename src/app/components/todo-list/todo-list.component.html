@@ -1,16 +1,40 @@
 <div class="container mx-auto p-6">
   <!-- En-tête -->
-  <div class="flex justify-between items-center mb-6">
-    <h1 class="text-3xl font-bold text-gray-800">Liste des Tâches</h1>
+ <div class="flex justify-between items-center mb-6">
+  <h1 class="text-3xl font-bold text-gray-800" transloco="TASK.LIST_TITLE">
+    Liste des Tâches
+  </h1>
+  
+  <div class="flex gap-2">
+    <!-- Boutons d'export -->
+    <button 
+      mat-stroked-button 
+      (click)="exportToExcel()"
+      class="flex items-center gap-2"
+      [disabled]="loading">
+      <mat-icon>description</mat-icon>
+      Excel
+    </button>
+    
+    <button 
+      mat-stroked-button 
+      (click)="exportToPDF()"
+      class="flex items-center gap-2"
+      [disabled]="loading">
+      <mat-icon>picture_as_pdf</mat-icon>
+      PDF
+    </button>
+    
     <button 
       mat-raised-button 
       color="primary"
       (click)="openTodoForm()"
       class="flex items-center gap-2">
       <mat-icon>add</mat-icon>
-      Ajouter une Tâche
+      <span transloco="TASK.ADD_TASK">Ajouter une Tâche</span>
     </button>
   </div>
+</div>
 
   <!-- Filtres -->
   <div class="bg-white p-4 rounded-lg shadow-md mb-6">

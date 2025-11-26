@@ -16,6 +16,8 @@ import { PersonService } from '../../services/person.service';
 import { Todo, Priority, Label } from '../../models/todo.model';
 import { Person } from '../../models/person.model';
 import { TodoFormComponent } from '../todo-form/todo-form.component';
+import { ExportService } from '../../services/export.service'; 
+
 
 @Component({
   selector: 'app-todo-list',
@@ -51,7 +53,8 @@ export class TodoListComponent implements OnInit {
   constructor(
     private todoService: TodoService,
     private personService: PersonService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private exportService: ExportService
   ) {}
 
   ngOnInit(): void {
@@ -160,4 +163,24 @@ export class TodoListComponent implements OnInit {
       default: return 'priority-moyen';
     }
   }
+
+exportToExcel(): void {
+  const dataToExport = this.dataSource.filteredData.length > 0 ? 
+    this.dataSource.filteredData : this.dataSource.data;
+  
+  const filename = this.dataSource.filteredData.length !== this.dataSource.data.length ? 
+    'todos_filtres' : 'todos_complets';
+  
+  this.exportService.exportToExcel(dataToExport, filename);
+}
+
+exportToPDF(): void {
+  const dataToExport = this.dataSource.filteredData.length > 0 ? 
+    this.dataSource.filteredData : this.dataSource.data;
+  
+  const filename = this.dataSource.filteredData.length !== this.dataSource.data.length ? 
+    'todos_filtres' : 'todos_complets';
+  
+  this.exportService.exportToPDF(dataToExport, filename);
+}
 }

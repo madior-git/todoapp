@@ -1,15 +1,41 @@
 <div class="container mx-auto p-6">
   <!-- En-tête -->
   <div class="flex justify-between items-center mb-6">
-    <h1 class="text-3xl font-bold text-gray-800">Gestion des Personnes</h1>
-    <button 
-      mat-raised-button 
-      color="primary"
-      (click)="openPersonForm()"
-      class="flex items-center gap-2">
-      <mat-icon>person_add</mat-icon>
-      Ajouter une Personne
-    </button>
+    <h1 class="text-3xl font-bold text-gray-800" transloco="PERSON.MANAGEMENT">
+      Gestion des Personnes
+    </h1>
+    
+    <div class="flex gap-2">
+      <!-- Boutons d'export -->
+      <button 
+        mat-stroked-button 
+        (click)="exportToExcel()"
+        class="flex items-center gap-2"
+        [disabled]="loading"
+        transloco="APP.EXPORT_EXCEL">
+        <mat-icon>description</mat-icon>
+        Excel
+      </button>
+      
+      <button 
+        mat-stroked-button 
+        (click)="exportToPDF()"
+        class="flex items-center gap-2"
+        [disabled]="loading"
+        transloco="APP.EXPORT_PDF">
+        <mat-icon>picture_as_pdf</mat-icon>
+        PDF
+      </button>
+      
+      <button 
+        mat-raised-button 
+        color="primary"
+        (click)="openPersonForm()"
+        class="flex items-center gap-2">
+        <mat-icon>person_add</mat-icon>
+        <span transloco="PERSON.ADD_PERSON">Ajouter une Personne</span>
+      </button>
+    </div>
   </div>
 
   <!-- Recherche -->

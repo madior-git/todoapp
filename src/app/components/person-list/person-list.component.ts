@@ -13,6 +13,7 @@ import { MatInputModule } from '@angular/material/input';
 import { PersonService } from '../../services/person.service';
 import { Person } from '../../models/person.model';
 import { PersonFormComponent } from '../person-form/person-form.component';
+import { ExportService } from '../../services/export.service'; 
 
 @Component({
   selector: 'app-person-list',
@@ -41,7 +42,9 @@ export class PersonListComponent implements OnInit {
 
   constructor(
     private personService: PersonService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private exportService: ExportService
+
   ) {}
 
   ngOnInit(): void {
@@ -115,5 +118,25 @@ export class PersonListComponent implements OnInit {
         }
       });
     }
+  }
+
+  exportToExcel(): void {
+    const dataToExport = this.dataSource.filteredData.length > 0 ? 
+      this.dataSource.filteredData : this.dataSource.data;
+    
+    const filename = this.dataSource.filteredData.length !== this.dataSource.data.length ? 
+      'personnes_filtrees' : 'personnes_completes';
+    
+    this.exportService.exportPersonsToExcel(dataToExport, filename);
+  }
+
+  exportToPDF(): void {
+    const dataToExport = this.dataSource.filteredData.length > 0 ? 
+      this.dataSource.filteredData : this.dataSource.data;
+    
+    const filename = this.dataSource.filteredData.length !== this.dataSource.data.length ? 
+      'personnes_filtrees' : 'personnes_completes';
+    
+    this.exportService.exportPersonsToPDF(dataToExport, filename);
   }
 }

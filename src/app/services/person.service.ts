@@ -5,10 +5,10 @@ import { environment } from '../../environments/environment';
 import { Person } from '../models/person.model';
 
 const INITIAL_PERSONS: Person[] = [
-  { id: 1, name: 'Jean Dupont', email: 'jean.dupont@email.com', phone: '0123456789' },
-  { id: 2, name: 'Marie Martin', email: 'marie.martin@email.com', phone: '0987654321' },
-  { id: 3, name: 'Pierre Lambert', email: 'pierre.lambert@email.com', phone: '0654321987' },
-  { id: 4, name: 'Sophie Bernard', email: 'sophie.bernard@email.com', phone: '0678912345' }
+  { id: 1, name: 'Madior', email: 'madior@email.com', phone: '776565657' },
+  { id: 2, name: 'Modou', email: 'modou@email.com', phone: '0987654321' },
+  { id: 3, name: 'Moussa', email: 'moussa@email.com', phone: '0654321987' },
+  { id: 4, name: 'Sophie', email: 'sophie@email.com', phone: '0678912345' }
 ];
 
 @Injectable({

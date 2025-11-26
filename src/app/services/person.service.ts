@@ -19,53 +19,53 @@ export class PersonService {
   constructor(private http: HttpClient) {}
 
   getPersons(): Observable<Person[]> {
-  // ⚠️ TEMPORAIREMENT : TOUJOURS utiliser les mocks
-  console.log('✅ FORCAGE DES DONNÉES MOCKÉES - PERSONS');
-  return of(MOCK_PERSONS);
-}
-
-getPerson(id: number): Observable<Person> {
-  // ⚠️ TEMPORAIREMENT : TOUJOURS utiliser les mocks
-  console.log('✅ FORCAGE DES DONNÉES MOCKÉES - PERSON ' + id);
-  const person = MOCK_PERSONS.find(p => p.id === id);
-  return of(person!);
-}
-
-createPerson(person: Omit<Person, 'id'>): Observable<Person> {
-  // ⚠️ TEMPORAIREMENT : TOUJOURS utiliser les mocks
-  console.log('✅ FORCAGE CRÉATION MOCKÉE - PERSON');
-  const newPerson = {
-    ...person,
-    id: Math.max(...MOCK_PERSONS.map(p => p.id)) + 1
-  } as Person;
-  MOCK_PERSONS.push(newPerson);
-  return of(newPerson);
-}
-
-updatePerson(id: number, person: Person): Observable<Person> {
-  // ⚠️ TEMPORAIREMENT : TOUJOURS utiliser les mocks
-  console.log('✅ FORCAGE MISE À JOUR MOCKÉE - PERSON ' + id);
-  const index = MOCK_PERSONS.findIndex(p => p.id === id);
-  if (index !== -1) {
-    MOCK_PERSONS[index] = person;
+    // ⚠️ TEMPORAIREMENT : TOUJOURS utiliser les mocks
+    console.log('✅ FORCAGE DES DONNÉES MOCKÉES - PERSONS');
+    return of(MOCK_PERSONS);
   }
-  return of(person);
-}
 
-deletePerson(id: number): Observable<void> {
-  // ⚠️ TEMPORAIREMENT : TOUJOURS utiliser les mocks
-  console.log('✅ FORCAGE SUPPRESSION MOCKÉE - PERSON ' + id);
-  const index = MOCK_PERSONS.findIndex(p => p.id === id);
-  if (index !== -1) {
-    MOCK_PERSONS.splice(index, 1);
+  getPerson(id: number): Observable<Person> {
+    // ⚠️ TEMPORAIREMENT : TOUJOURS utiliser les mocks
+    console.log('✅ FORCAGE DES DONNÉES MOCKÉES - PERSON ' + id);
+    const person = MOCK_PERSONS.find(p => p.id === id);
+    return of(person!);
   }
-  return of(void 0);
-}
 
-checkNameUnique(name: string): Observable<boolean> {
-  // ⚠️ TEMPORAIREMENT : TOUJOURS utiliser les mocks
-  console.log('✅ FORCAGE VÉRIFICATION NOM MOCKÉE');
-  const exists = MOCK_PERSONS.some(p => p.name.toLowerCase() === name.toLowerCase());
-  return of(!exists);
-}
+  createPerson(person: Omit<Person, 'id'>): Observable<Person> {
+    // ⚠️ TEMPORAIREMENT : TOUJOURS utiliser les mocks
+    console.log('✅ FORCAGE CRÉATION MOCKÉE - PERSON');
+    const newPerson = {
+      ...person,
+      id: Math.max(...MOCK_PERSONS.map(p => p.id)) + 1
+    } as Person;
+    MOCK_PERSONS.push(newPerson);
+    return of(newPerson);
+  }
+
+  updatePerson(id: number, person: Person): Observable<Person> {
+    // ⚠️ TEMPORAIREMENT : TOUJOURS utiliser les mocks
+    console.log('✅ FORCAGE MISE À JOUR MOCKÉE - PERSON ' + id);
+    const index = MOCK_PERSONS.findIndex(p => p.id === id);
+    if (index !== -1) {
+      MOCK_PERSONS[index] = person;
+    }
+    return of(person);
+  }
+
+  deletePerson(id: number): Observable<void> {
+    // ⚠️ TEMPORAIREMENT : TOUJOURS utiliser les mocks
+    console.log('✅ FORCAGE SUPPRESSION MOCKÉE - PERSON ' + id);
+    const index = MOCK_PERSONS.findIndex(p => p.id === id);
+    if (index !== -1) {
+      MOCK_PERSONS.splice(index, 1);
+    }
+    return of(void 0);
+  }
+
+  checkNameUnique(name: string): Observable<boolean> {
+    // ⚠️ TEMPORAIREMENT : TOUJOURS utiliser les mocks
+    console.log('✅ FORCAGE VÉRIFICATION NOM MOCKÉE');
+    const exists = MOCK_PERSONS.some(p => p.name.toLowerCase() === name.toLowerCase());
+    return of(!exists);
+  }
 }

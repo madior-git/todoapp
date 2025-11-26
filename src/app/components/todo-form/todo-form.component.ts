@@ -11,7 +11,7 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
 import { MatOptionModule } from '@angular/material/core';
 import { map, startWith } from 'rxjs/operators';
-import { Observable, of } from 'rxjs'; // ← Ajout de 'of'
+import { Observable, of } from 'rxjs';
 
 import { Todo, Priority, Label } from '../../models/todo.model';
 import { Person } from '../../models/person.model';
@@ -37,10 +37,23 @@ import { Person } from '../../models/person.model';
 })
 export class TodoFormComponent implements OnInit {
   todoForm: FormGroup;
-  priorities = Object.values(Priority);
-  labels = Object.values(Label);
+  
+  // Utiliser les valeurs des enums pour les sélecteurs
+  priorities = [
+    { value: Priority.EASY, label: 'Facile' },
+    { value: Priority.MEDIUM, label: 'Moyen' },
+    { value: Priority.HARD, label: 'Difficile' }
+  ];
+  
+  labels = [
+    { value: Label.HTML, label: 'HTML' },
+    { value: Label.CSS, label: 'CSS' },
+    { value: Label.NODE_JS, label: 'NODE JS' },
+    { value: Label.JQUERY, label: 'JQUERY' }
+  ];
+  
   persons: Person[] = [];
-  filteredPersons: Observable<Person[]> = of([]); // ← INITIALISATION
+  filteredPersons: Observable<Person[]> = of([]);
 
   constructor(
     private fb: FormBuilder,
@@ -61,10 +74,14 @@ export class TodoFormComponent implements OnInit {
     );
 
     if (this.data.todo) {
-      this.todoForm.patchValue({
+      // S'assurer que les dates sont correctement formatées
+      const todoData = {
         ...this.data.todo,
-        person: this.data.todo.person
-      });
+        person: this.data.todo.person,
+        startDate: new Date(this.data.todo.startDate),
+        endDate: this.data.todo.endDate ? new Date(this.data.todo.endDate) : null
+      };
+      this.todoForm.patchValue(todoData);
     }
   }
 
@@ -108,9 +125,25 @@ export class TodoFormComponent implements OnInit {
     this.todoForm.patchValue({ labels });
   }
 
+  // Méthode utilitaire pour vérifier si un label est coché
+  isLabelChecked(label: Label): boolean {
+    const labels = this.todoForm.get('labels')?.value || [];
+    return labels.includes(label);
+  }
+
   onSave(): void {
     if (this.todoForm.valid) {
-      this.dialogRef.close(this.todoForm.value);
+      // Préparer les données pour l'envoi
+      const formValue = this.todoForm.value;
+      
+      // S'assurer que les dates sont au bon format
+      const todoData = {
+        ...formValue,
+        startDate: formValue.startDate,
+        endDate: formValue.endDate
+      };
+      
+      this.dialogRef.close(todoData);
     } else {
       this.markFormGroupTouched();
     }
@@ -145,5 +178,13 @@ export class TodoFormComponent implements OnInit {
     return '';
   }
 
-  
+  // Méthode pour obtenir le libellé d'une priorité
+  getPriorityLabel(priority: Priority): string {
+    switch (priority) {
+      case Priority.EASY: return 'Facile';
+      case Priority.MEDIUM: return 'Moyen';
+      case Priority.HARD: return 'Difficile';
+      default: return priority;
+    }
+  }
 }

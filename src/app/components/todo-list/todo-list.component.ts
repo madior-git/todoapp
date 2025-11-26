@@ -18,7 +18,6 @@ import { Person } from '../../models/person.model';
 import { TodoFormComponent } from '../todo-form/todo-form.component';
 import { ExportService } from '../../services/export.service'; 
 
-
 @Component({
   selector: 'app-todo-list',
   standalone: true,
@@ -45,10 +44,26 @@ export class TodoListComponent implements OnInit {
   dataSource = new MatTableDataSource<Todo>();
   loading = true;
 
-  // Filtres
+  // Filtres - utiliser les valeurs string des enums
   priorityFilter: string = '';
   labelFilter: string = '';
   persons: Person[] = [];
+
+  // Options pour les filtres
+  priorityOptions = [
+    { value: '', label: 'Toutes les priorités' },
+    { value: Priority.EASY, label: 'Facile' },
+    { value: Priority.MEDIUM, label: 'Moyen' },
+    { value: Priority.HARD, label: 'Difficile' }
+  ];
+
+  labelOptions = [
+    { value: '', label: 'Toutes les technologies' },
+    { value: Label.HTML, label: 'HTML' },
+    { value: Label.CSS, label: 'CSS' },
+    { value: Label.NODE_JS, label: 'NODE JS' },
+    { value: Label.JQUERY, label: 'JQUERY' }
+  ];
 
   constructor(
     private todoService: TodoService,
@@ -90,8 +105,18 @@ export class TodoListComponent implements OnInit {
   applyFilter(): void {
     this.dataSource.filterPredicate = (data: Todo, filter: string) => {
       const filters = JSON.parse(filter);
+      
+      // Filtre par priorité
       const priorityMatch = !filters.priority || data.priority === filters.priority;
-      const labelMatch = !filters.label || data.labels.includes(filters.label as Label);
+      
+      // Filtre par label
+      let labelMatch = true;
+      if (filters.label) {
+        // Convertir la valeur string du filtre en enum Label
+        const labelValue = filters.label as string;
+        labelMatch = data.labels.some(label => label === labelValue);
+      }
+      
       return priorityMatch && labelMatch;
     };
 
@@ -108,40 +133,40 @@ export class TodoListComponent implements OnInit {
   }
 
   openTodoForm(todo?: Todo): void {
-  this.personService.getPersons().subscribe(persons => {
-    const dialogRef = this.dialog.open(TodoFormComponent, {
-      width: '600px',
-      maxHeight: '80vh',
-      panelClass: 'custom-dialog-container',
-      data: { 
-        todo: todo ? { ...todo } : null, 
-        persons: persons 
-      }
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        if (todo) {
-          this.todoService.updateTodo(todo.id, { ...todo, ...result }).subscribe({
-            next: () => this.loadTodos(),
-            error: (error) => {
-              console.error('Erreur lors de la modification:', error);
-              alert('Erreur lors de la modification de la tâche');
-            }
-          });
-        } else {
-          this.todoService.createTodo(result).subscribe({
-            next: () => this.loadTodos(),
-            error: (error) => {
-              console.error('Erreur lors de la création:', error);
-              alert('Erreur lors de la création de la tâche');
-            }
-          });
+    this.personService.getPersons().subscribe(persons => {
+      const dialogRef = this.dialog.open(TodoFormComponent, {
+        width: '600px',
+        maxHeight: '80vh',
+        panelClass: 'custom-dialog-container',
+        data: { 
+          todo: todo ? { ...todo } : null, 
+          persons: persons 
         }
-      }
+      });
+
+      dialogRef.afterClosed().subscribe(result => {
+        if (result) {
+          if (todo) {
+            this.todoService.updateTodo(todo.id, { ...todo, ...result }).subscribe({
+              next: () => this.loadTodos(),
+              error: (error) => {
+                console.error('Erreur lors de la modification:', error);
+                alert('Erreur lors de la modification de la tâche');
+              }
+            });
+          } else {
+            this.todoService.createTodo(result).subscribe({
+              next: () => this.loadTodos(),
+              error: (error) => {
+                console.error('Erreur lors de la création:', error);
+                alert('Erreur lors de la création de la tâche');
+              }
+            });
+          }
+        }
+      });
     });
-  });
-}
+  }
 
   deleteTodo(todo: Todo): void {
     if (confirm(`Êtes-vous sûr de vouloir supprimer la tâche "${todo.titre}" ?`)) {
@@ -155,32 +180,49 @@ export class TodoListComponent implements OnInit {
     }
   }
 
-  getPriorityClass(priority: string): string {
+  getPriorityClass(priority: Priority): string {
     switch (priority) {
-      case 'Facile': return 'priority-facile';
-      case 'Moyen': return 'priority-moyen';
-      case 'Difficile': return 'priority-difficile';
+      case Priority.EASY: return 'priority-facile';
+      case Priority.MEDIUM: return 'priority-moyen';
+      case Priority.HARD: return 'priority-difficile';
       default: return 'priority-moyen';
     }
   }
 
-exportToExcel(): void {
-  const dataToExport = this.dataSource.filteredData.length > 0 ? 
-    this.dataSource.filteredData : this.dataSource.data;
-  
-  const filename = this.dataSource.filteredData.length !== this.dataSource.data.length ? 
-    'todos_filtres' : 'todos_complets';
-  
-  this.exportService.exportToExcel(dataToExport, filename);
-}
+  getPriorityDisplay(priority: Priority): string {
+    switch (priority) {
+      case Priority.EASY: return 'Facile';
+      case Priority.MEDIUM: return 'Moyen';
+      case Priority.HARD: return 'Difficile';
+      default: return priority;
+    }
+  }
 
-exportToPDF(): void {
-  const dataToExport = this.dataSource.filteredData.length > 0 ? 
-    this.dataSource.filteredData : this.dataSource.data;
-  
-  const filename = this.dataSource.filteredData.length !== this.dataSource.data.length ? 
-    'todos_filtres' : 'todos_complets';
-  
-  this.exportService.exportToPDF(dataToExport, filename);
-}
+  getLabelDisplay(label: Label): string {
+    return label; // Les labels sont déjà des strings lisibles
+  }
+
+  getInitials(name: string): string {
+    return name.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
+  }
+
+  exportToExcel(): void {
+    const dataToExport = this.dataSource.filteredData.length > 0 ? 
+      this.dataSource.filteredData : this.dataSource.data;
+    
+    const filename = this.dataSource.filteredData.length !== this.dataSource.data.length ? 
+      'todos_filtres' : 'todos_complets';
+    
+    this.exportService.exportToExcel(dataToExport, filename);
+  }
+
+  exportToPDF(): void {
+    const dataToExport = this.dataSource.filteredData.length > 0 ? 
+      this.dataSource.filteredData : this.dataSource.data;
+    
+    const filename = this.dataSource.filteredData.length !== this.dataSource.data.length ? 
+      'todos_filtres' : 'todos_complets';
+    
+    this.exportService.exportToPDF(dataToExport, filename);
+  }
 }

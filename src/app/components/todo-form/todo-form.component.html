@@ -3,7 +3,7 @@
     {{ data.todo ? 'Modifier la tâche' : 'Nouvelle tâche' }}
   </h2>
 
-  <form [formGroup]="todoForm" class="space-y-3">
+  <form [formGroup]="todoForm" class="space-y-4">
     
     <!-- Titre -->
     <div class="form-field">
@@ -17,35 +17,39 @@
     </div>
 
     <!-- Personne (Autocomplete) -->
-    <div class="form-field">
-      <mat-form-field appearance="outline" class="w-full">
-        <mat-label>Personne assignée *</mat-label>
-        <input type="text"
-               matInput
-               formControlName="person"
-               [matAutocomplete]="auto">
-        <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayPerson">
-          <mat-option *ngFor="let person of filteredPersons | async" [value]="person">
-            <div class="flex flex-col py-1">
-              <span class="font-medium text-sm">{{ person.name }}</span>
-              <span class="text-xs text-gray-500">{{ person.email }}</span>
-            </div>
-          </mat-option>
-        </mat-autocomplete>
-        <mat-error *ngIf="isFieldInvalid('person')">
-          Veuillez sélectionner une personne
-        </mat-error>
-      </mat-form-field>
-    </div>
+    <!-- Personne (Autocomplete) -->
+<div class="form-field">
+  <mat-form-field appearance="outline" class="w-full">
+    <mat-label>Personne assignée *</mat-label>
+    <input type="text"
+           matInput
+           formControlName="person"
+           [matAutocomplete]="auto"> <!-- ⬅️ RETIRER displayWith d'ici -->
+    <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayPerson"> <!-- ⬅️ METTRE displayWith ICI -->
+      <mat-option *ngFor="let person of filteredPersons | async" [value]="person">
+        <div class="flex flex-col py-1">
+          <span class="font-medium text-sm">{{ person.name }}</span>
+          <span class="text-xs text-gray-500">{{ person.email }}</span>
+        </div>
+      </mat-option>
+    </mat-autocomplete>
+    <mat-error *ngIf="isFieldInvalid('person')">
+      Veuillez sélectionner une personne
+    </mat-error>
+  </mat-form-field>
+</div>
 
     <!-- Dates -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
       <div class="form-field">
         <mat-form-field appearance="outline" class="w-full">
           <mat-label>Date de début *</mat-label>
           <input matInput [matDatepicker]="startPicker" formControlName="startDate">
           <mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
           <mat-datepicker #startPicker></mat-datepicker>
+          <mat-error *ngIf="isFieldInvalid('startDate')">
+            La date de début est obligatoire
+          </mat-error>
         </mat-form-field>
       </div>
 
@@ -64,22 +68,26 @@
       <mat-form-field appearance="outline" class="w-full">
         <mat-label>Priorité *</mat-label>
         <mat-select formControlName="priority">
-          <mat-option *ngFor="let priority of priorities" [value]="priority">
-            {{ priority }}
+          <mat-option *ngFor="let priority of priorities" [value]="priority.value">
+            {{ priority.label }}
           </mat-option>
         </mat-select>
+        <mat-error *ngIf="isFieldInvalid('priority')">
+          Veuillez sélectionner une priorité
+        </mat-error>
       </mat-form-field>
     </div>
 
     <!-- Labels -->
     <div class="form-field">
-      <label class="block text-sm font-medium text-gray-700 mb-1">Labels</label>
-      <div class="flex flex-wrap gap-2">
-        <mat-checkbox *ngFor="let label of labels" 
-                     (change)="onLabelChange(label, $event)"
-                     [checked]="todoForm.get('labels')?.value?.includes(label)"
-                     class="text-sm">
-          {{ label }}
+      <label class="block text-sm font-medium text-gray-700 mb-2">Technologies</label>
+      <div class="flex flex-wrap gap-3">
+        <mat-checkbox 
+          *ngFor="let label of labels" 
+          (change)="onLabelChange(label.value, $event)"
+          [checked]="isLabelChecked(label.value)"
+          class="text-sm">
+          {{ label.label }}
         </mat-checkbox>
       </div>
     </div>
@@ -88,7 +96,7 @@
     <div class="form-field">
       <mat-form-field appearance="outline" class="w-full">
         <mat-label>Description</mat-label>
-        <textarea matInput formControlName="description" rows="2" placeholder="Description..."></textarea>
+        <textarea matInput formControlName="description" rows="2" placeholder="Description de la tâche..."></textarea>
       </mat-form-field>
     </div>
 

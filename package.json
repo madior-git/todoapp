@@ -8,7 +8,8 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "server": "json-server --watch db.json --port 3000",
-    "dev": "concurrently \"npm run server\" \"ng serve\""
+    "dev": "concurrently \"npm run server\" \"ng serve\"",
+    "postbuild": "cp netlify.toml dist/todo_app/browser/ 2>/dev/null || true"
   },
   "private": true,
   "dependencies": {

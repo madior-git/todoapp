@@ -70,56 +70,47 @@ export class TodoService {
 
   constructor(private http: HttpClient) {}
 
-  getTodos(): Observable<Todo[]> {
-    // En production (Netlify), utiliser les mocks
-    // En développement, utiliser json-server
-    if (environment.production) {
-      return of(MOCK_TODOS);
-    }
-    return this.http.get<Todo[]>(`${environment.apiUrl}/todos`);
-  }
+ getTodos(): Observable<Todo[]> {
+  // ⚠️ TEMPORAIREMENT : TOUJOURS utiliser les mocks
+  console.log('✅ FORCAGE DES DONNÉES MOCKÉES - TODOS');
+  return of(MOCK_TODOS);
+}
 
-  getTodo(id: number): Observable<Todo> {
-      console.log('✅ Utilisation des données mockées pour les todos');
+getTodo(id: number): Observable<Todo> {
+  // ⚠️ TEMPORAIREMENT : TOUJOURS utiliser les mocks
+  console.log('✅ FORCAGE DES DONNÉES MOCKÉES - TODO ' + id);
+  const todo = MOCK_TODOS.find(t => t.id === id);
+  return of(todo!);
+}
 
-    if (environment.production) {
-      const todo = MOCK_TODOS.find(t => t.id === id);
-      return of(todo!);
-    }
-    return this.http.get<Todo>(`${environment.apiUrl}/todos/${id}`);
-  }
+createTodo(todo: Omit<Todo, 'id'>): Observable<Todo> {
+  // ⚠️ TEMPORAIREMENT : TOUJOURS utiliser les mocks
+  console.log('✅ FORCAGE CRÉATION MOCKÉE - TODO');
+  const newTodo = {
+    ...todo,
+    id: Math.max(...MOCK_TODOS.map(t => t.id)) + 1
+  } as Todo;
+  MOCK_TODOS.push(newTodo);
+  return of(newTodo);
+}
 
-  createTodo(todo: Omit<Todo, 'id'>): Observable<Todo> {
-    if (environment.production) {
-      const newTodo = {
-        ...todo,
-        id: Math.max(...MOCK_TODOS.map(t => t.id)) + 1
-      } as Todo;
-      MOCK_TODOS.push(newTodo);
-      return of(newTodo);
-    }
-    return this.http.post<Todo>(`${environment.apiUrl}/todos`, todo);
+updateTodo(id: number, todo: Todo): Observable<Todo> {
+  // ⚠️ TEMPORAIREMENT : TOUJOURS utiliser les mocks
+  console.log('✅ FORCAGE MISE À JOUR MOCKÉE - TODO ' + id);
+  const index = MOCK_TODOS.findIndex(t => t.id === id);
+  if (index !== -1) {
+    MOCK_TODOS[index] = todo;
   }
+  return of(todo);
+}
 
-  updateTodo(id: number, todo: Todo): Observable<Todo> {
-    if (environment.production) {
-      const index = MOCK_TODOS.findIndex(t => t.id === id);
-      if (index !== -1) {
-        MOCK_TODOS[index] = todo;
-      }
-      return of(todo);
-    }
-    return this.http.put<Todo>(`${environment.apiUrl}/todos/${id}`, todo);
+deleteTodo(id: number): Observable<void> {
+  // ⚠️ TEMPORAIREMENT : TOUJOURS utiliser les mocks
+  console.log('✅ FORCAGE SUPPRESSION MOCKÉE - TODO ' + id);
+  const index = MOCK_TODOS.findIndex(t => t.id === id);
+  if (index !== -1) {
+    MOCK_TODOS.splice(index, 1);
   }
-
-  deleteTodo(id: number): Observable<void> {
-    if (environment.production) {
-      const index = MOCK_TODOS.findIndex(t => t.id === id);
-      if (index !== -1) {
-        MOCK_TODOS.splice(index, 1);
-      }
-      return of(void 0);
-    }
-    return this.http.delete<void>(`${environment.apiUrl}/todos/${id}`);
-  }
+  return of(void 0);
+}
 }

@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, of, map } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { Person } from '../models/person.model';
 
-const MOCK_PERSONS: Person[] = [
+const INITIAL_PERSONS: Person[] = [
   { id: 1, name: 'Jean Dupont', email: 'jean.dupont@email.com', phone: '0123456789' },
   { id: 2, name: 'Marie Martin', email: 'marie.martin@email.com', phone: '0987654321' },
   { id: 3, name: 'Pierre Lambert', email: 'pierre.lambert@email.com', phone: '0654321987' },
@@ -15,57 +15,75 @@ const MOCK_PERSONS: Person[] = [
   providedIn: 'root'
 })
 export class PersonService {
+  private readonly STORAGE_KEY = 'todo_app_persons';
 
   constructor(private http: HttpClient) {}
 
+  private getPersonsFromStorage(): Person[] {
+    const stored = localStorage.getItem(this.STORAGE_KEY);
+    if (stored) {
+      return JSON.parse(stored);
+    }
+    this.savePersonsToStorage(INITIAL_PERSONS);
+    return INITIAL_PERSONS;
+  }
+
+  private savePersonsToStorage(persons: Person[]): void {
+    localStorage.setItem(this.STORAGE_KEY, JSON.stringify(persons));
+  }
+
   getPersons(): Observable<Person[]> {
-    // ⚠️ TEMPORAIREMENT : TOUJOURS utiliser les mocks
-    console.log('✅ FORCAGE DES DONNÉES MOCKÉES - PERSONS');
-    return of(MOCK_PERSONS);
+    console.log('✅ CHARGEMENT PERSONS DEPUIS LOCALSTORAGE');
+    const persons = this.getPersonsFromStorage();
+    return of(persons);
   }
 
   getPerson(id: number): Observable<Person> {
-    // ⚠️ TEMPORAIREMENT : TOUJOURS utiliser les mocks
-    console.log('✅ FORCAGE DES DONNÉES MOCKÉES - PERSON ' + id);
-    const person = MOCK_PERSONS.find(p => p.id === id);
+    console.log('✅ RECHERCHE PERSON ' + id + ' DANS LOCALSTORAGE');
+    const persons = this.getPersonsFromStorage();
+    const person = persons.find(p => p.id === id);
     return of(person!);
   }
 
   createPerson(person: Omit<Person, 'id'>): Observable<Person> {
-    // ⚠️ TEMPORAIREMENT : TOUJOURS utiliser les mocks
-    console.log('✅ FORCAGE CRÉATION MOCKÉE - PERSON');
+    console.log('✅ CRÉATION PERSON AVEC LOCALSTORAGE');
+    const persons = this.getPersonsFromStorage();
     const newPerson = {
       ...person,
-      id: Math.max(...MOCK_PERSONS.map(p => p.id)) + 1
+      id: persons.length > 0 ? Math.max(...persons.map(p => p.id)) + 1 : 1
     } as Person;
-    MOCK_PERSONS.push(newPerson);
+    
+    persons.push(newPerson);
+    this.savePersonsToStorage(persons);
     return of(newPerson);
   }
 
   updatePerson(id: number, person: Person): Observable<Person> {
-    // ⚠️ TEMPORAIREMENT : TOUJOURS utiliser les mocks
-    console.log('✅ FORCAGE MISE À JOUR MOCKÉE - PERSON ' + id);
-    const index = MOCK_PERSONS.findIndex(p => p.id === id);
+    console.log('✅ MISE À JOUR PERSON ' + id + ' DANS LOCALSTORAGE');
+    const persons = this.getPersonsFromStorage();
+    const index = persons.findIndex(p => p.id === id);
     if (index !== -1) {
-      MOCK_PERSONS[index] = person;
+      persons[index] = person;
+      this.savePersonsToStorage(persons);
     }
     return of(person);
   }
 
   deletePerson(id: number): Observable<void> {
-    // ⚠️ TEMPORAIREMENT : TOUJOURS utiliser les mocks
-    console.log('✅ FORCAGE SUPPRESSION MOCKÉE - PERSON ' + id);
-    const index = MOCK_PERSONS.findIndex(p => p.id === id);
+    console.log('✅ SUPPRESSION PERSON ' + id + ' DANS LOCALSTORAGE');
+    const persons = this.getPersonsFromStorage();
+    const index = persons.findIndex(p => p.id === id);
     if (index !== -1) {
-      MOCK_PERSONS.splice(index, 1);
+      persons.splice(index, 1);
+      this.savePersonsToStorage(persons);
     }
     return of(void 0);
   }
 
   checkNameUnique(name: string): Observable<boolean> {
-    // ⚠️ TEMPORAIREMENT : TOUJOURS utiliser les mocks
-    console.log('✅ FORCAGE VÉRIFICATION NOM MOCKÉE');
-    const exists = MOCK_PERSONS.some(p => p.name.toLowerCase() === name.toLowerCase());
+    console.log('✅ VÉRIFICATION NOM UNIQUE DANS LOCALSTORAGE');
+    const persons = this.getPersonsFromStorage();
+    const exists = persons.some(p => p.name.toLowerCase() === name.toLowerCase());
     return of(!exists);
   }
 }

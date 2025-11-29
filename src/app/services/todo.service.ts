@@ -15,7 +15,8 @@ const INITIAL_TODOS: Todo[] = [
     priority: Priority.MEDIUM,
     labels: [Label.HTML, Label.CSS],
     description: 'Créer le composant principal de l\'application avec Angular Material',
-    completed: false
+    completed: false,
+    favoris: false
   },
   {
     id: 2,
@@ -26,7 +27,8 @@ const INITIAL_TODOS: Todo[] = [
     priority: Priority.HARD,
     labels: [Label.NODE_JS],
     description: 'Ajouter la validation reactive forms avec messages d\'erreur',
-    completed: false
+    completed: false,
+    favoris: false
   },
   {
     id: 3,
@@ -37,7 +39,8 @@ const INITIAL_TODOS: Todo[] = [
     priority: Priority.EASY,
     labels: [Label.HTML, Label.JQUERY],
     description: 'Développer les services pour communiquer avec l\'API',
-    completed: false
+    completed: false,
+    favoris: false
   },
   {
     id: 4,
@@ -48,7 +51,8 @@ const INITIAL_TODOS: Todo[] = [
     priority: Priority.MEDIUM,
     labels: [Label.CSS, Label.JQUERY],
     description: 'Mettre en place le système de routing Angular',
-    completed: true
+    completed: true,
+    favoris: false
   },
   {
     id: 5,
@@ -59,7 +63,8 @@ const INITIAL_TODOS: Todo[] = [
     priority: Priority.HARD,
     labels: [Label.NODE_JS],
     description: 'Écrire les tests unitaires pour les services et composants',
-    completed: false
+    completed: false,
+    favoris: false
   }
 ];
 

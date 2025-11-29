@@ -40,13 +40,15 @@ export class TodoListComponent implements OnInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
-  displayedColumns: string[] = ['titre', 'person', 'priority', 'labels', 'startDate', 'endDate', 'actions'];
+  displayedColumns: string[] = ['titre', 'person', 'priority', 'labels', 'startDate', 'endDate', 'favoris','actions'];
   dataSource = new MatTableDataSource<Todo>();
   loading = true;
 
   // Filtres - utiliser les valeurs string des enums
+  
   priorityFilter: string = '';
   labelFilter: string = '';
+  favorisFilter: string = '';
   persons: Person[] = [];
 
   // Options pour les filtres
@@ -63,6 +65,11 @@ export class TodoListComponent implements OnInit {
     { value: Label.CSS, label: 'CSS' },
     { value: Label.NODE_JS, label: 'NODE JS' },
     { value: Label.JQUERY, label: 'JQUERY' }
+  ];
+   favorisOptions = [
+    { value: '', label: 'Toutes les tâches' },
+    { value: 'true', label: 'Favoris seulement' },
+    { value: 'false', label: 'Non favoris' }
   ];
 
   constructor(
@@ -116,19 +123,29 @@ export class TodoListComponent implements OnInit {
         const labelValue = filters.label as string;
         labelMatch = data.labels.some(label => label === labelValue);
       }
+
+      let favorisMatch = true;
+      if (filters.favoris !== '') {
+        // Convertir la string en boolean
+        const isFavoris = filters.favoris === 'true';
+        favorisMatch = data.favoris === isFavoris;
+      }
       
-      return priorityMatch && labelMatch;
+      
+      return priorityMatch && labelMatch && favorisMatch;;
     };
 
     this.dataSource.filter = JSON.stringify({
       priority: this.priorityFilter,
-      label: this.labelFilter
+      label: this.labelFilter,
+      favoris: this.favorisFilter
     });
   }
 
   resetFilters(): void {
     this.priorityFilter = '';
     this.labelFilter = '';
+    this.favorisFilter = '';
     this.applyFilter();
   }
 
@@ -225,4 +242,22 @@ export class TodoListComponent implements OnInit {
     
     this.exportService.exportToPDF(dataToExport, filename);
   }
+
+  toggleFavorite(todo: Todo): void {
+  // Empêcher la propagation de l'événement
+  event?.stopPropagation();
+  
+  const updatedTodo = { ...todo, favoris: !todo.favoris };
+  
+  this.todoService.updateTodo(todo.id, updatedTodo).subscribe({
+    next: () => {
+      console.log(`Tâche "${todo.titre}" ${updatedTodo.favoris ? 'ajoutée aux' : 'retirée des'} favoris`);
+      this.loadTodos(); // Recharger la liste pour voir les changements
+    },
+    error: (error) => {
+      console.error('Erreur lors de la mise à jour des favoris:', error);
+      alert('Erreur lors de la modification des favoris');
+    }
+  });
+}
 }

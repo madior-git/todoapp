@@ -18,7 +18,8 @@
         "JQUERY"
       ],
       "description": "Créer le composant principal de l'application avec Angular Material",
-      "completed": false
+      "completed": false,
+      "favoris": true
     },
     {
       "id": 2,
@@ -36,7 +37,8 @@
         "NODE JS"
       ],
       "description": "Ajouter la validation reactive forms avec messages d'erreur",
-      "completed": false
+      "completed": false,
+      "favoris": true
     },
     {
       "id": 3,
@@ -66,7 +68,7 @@
         "phone": "0678912345"
       },
       "startDate": "2025-11-25T16:57:21.151Z",
-      "endDate": null,
+      "endDate": "2025-11-30T00:00:00.000Z",
       "priority": "Difficile",
       "labels": [
         "NODE JS"
@@ -74,6 +76,26 @@
       "description": "Faire un backend qui permet de lister les utilisateurs ",
       "completed": false,
       "id": 4
+    },
+    {
+      "titre": "Test",
+      "person": {
+        "name": "Moussa",
+        "email": "moussa@gmail.com",
+        "phone": "7777777",
+        "id": 4
+      },
+      "startDate": "2025-11-29T07:07:51.382Z",
+      "endDate": null,
+      "priority": "Moyen",
+      "labels": [
+        "NODE JS",
+        "HTML",
+        "JQUERY"
+      ],
+      "description": "test description",
+      "completed": false,
+      "id": 5
     }
   ],
   "persons": [
@@ -93,12 +115,12 @@
       "id": 3,
       "name": "Aton",
       "email": "aton@email.com",
-      "phone": "0654321987"
+      "phone": "0654321988"
     },
     {
-      "name": "testeur",
-      "email": "testeur@gmail.com",
-      "phone": "772777777",
+      "name": "Moussa",
+      "email": "moussa@gmail.com",
+      "phone": "7777777",
       "id": 4
     }
   ]

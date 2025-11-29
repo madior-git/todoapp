@@ -21,6 +21,7 @@ export interface Todo {
   endDate: Date | null;
   priority: Priority;
   labels: Label[];
+  favoris: boolean;
   description: string;
   completed: boolean;
 }
